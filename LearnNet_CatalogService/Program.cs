@@ -1,4 +1,6 @@
 
+using LearnNet_CatalogService.Core.Interfaces;
+using LearnNet_CatalogService.Domain.Entities;
 using LearnNet_CatalogService.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,6 +21,9 @@ namespace LearnNet_CatalogService
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddScoped<IRepository<Category>, Repository<Category>>();
+            builder.Services.AddScoped<IRepository<Product>, Repository<Product>>();
 
             var app = builder.Build();
 

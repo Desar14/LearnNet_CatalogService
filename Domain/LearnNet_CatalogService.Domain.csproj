@@ -9,7 +9,10 @@
   <ItemGroup>
     <Folder Include="Common\" />
     <Folder Include="Services\" />
-    <Folder Include="Validators\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="11.7.1" />
   </ItemGroup>
 
 </Project>

@@ -8,7 +8,8 @@ namespace LearnNet_CatalogService.Domain.Entities
         public string? Description { get; set; }
         public Uri? ImageUrl { get; set; }
         public required Category Category { get; set; }
-        public decimal? Price { get; set; }
-        public int? Amount { get; set;}
+        public string CategoryId { get; set; }
+        public decimal Price { get; set; }
+        public int Amount { get; set;}
     }
 }
