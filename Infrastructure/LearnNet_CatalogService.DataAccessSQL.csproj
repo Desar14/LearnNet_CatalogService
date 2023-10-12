@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Core\LearnNet_CatalogService.Core.csproj" />
+    <ProjectReference Include="..\Data\LearnNet_CatalogService.Data.csproj" />
     <ProjectReference Include="..\Domain\LearnNet_CatalogService.Domain.csproj" />
   </ItemGroup>
 

@@ -7,12 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Common\" />
-    <Folder Include="Services\" />
+    <PackageReference Include="FluentValidation" Version="11.7.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="11.7.1" />
+    <ProjectReference Include="..\Core\LearnNet_CatalogService.Core.csproj" />
+    <ProjectReference Include="..\Data\LearnNet_CatalogService.Data.csproj" />
   </ItemGroup>
 
 </Project>

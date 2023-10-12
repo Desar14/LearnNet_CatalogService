@@ -1,15 +1,10 @@
 ﻿using LearnNet_CatalogService.Core.Interfaces;
-using LearnNet_CatalogService.Domain.Common;
+using LearnNet_CatalogService.Data.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace LearnNet_CatalogService.Infrastructure
+namespace LearnNet_CatalogService.DataAccessSQL
 {
     public class Repository<T> : IRepository<T> where T : BaseEntity
     {
@@ -35,6 +30,11 @@ namespace LearnNet_CatalogService.Infrastructure
                 _logger.LogError(ex, $"Repository {nameof(T)} add error");
                 throw;
             }
+        }
+
+        public async Task<int> Commit()
+        {
+            return await _dbContext.SaveChangesAsync();
         }
 
         public async Task Delete(int id)

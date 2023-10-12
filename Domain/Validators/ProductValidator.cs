@@ -1,10 +1,5 @@
 ﻿using FluentValidation;
-using LearnNet_CatalogService.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using LearnNet_CatalogService.Data.Entities;
 
 namespace LearnNet_CatalogService.Domain.Validators
 {

@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Infrastructure\LearnNet_CatalogService.Infrastructure.csproj" />
+    <ProjectReference Include="..\Infrastructure\LearnNet_CatalogService.DataAccessSQL.csproj" />
   </ItemGroup>
 
 </Project>

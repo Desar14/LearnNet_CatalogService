@@ -1,7 +1,10 @@
 
+using FluentValidation;
 using LearnNet_CatalogService.Core.Interfaces;
-using LearnNet_CatalogService.Domain.Entities;
-using LearnNet_CatalogService.Infrastructure;
+using LearnNet_CatalogService.Data.Entities;
+using LearnNet_CatalogService.DataAccessSQL;
+using LearnNet_CatalogService.Domain.Services;
+using LearnNet_CatalogService.Domain.Validators;
 using Microsoft.EntityFrameworkCore;
 
 namespace LearnNet_CatalogService
@@ -24,6 +27,10 @@ namespace LearnNet_CatalogService
 
             builder.Services.AddScoped<IRepository<Category>, Repository<Category>>();
             builder.Services.AddScoped<IRepository<Product>, Repository<Product>>();
+            builder.Services.AddScoped<IValidator<Category>, CategoryValidator>();
+            builder.Services.AddScoped<IValidator<Product>, ProductValidator>();
+            builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddScoped<IProductService, ProductService>();
 
             var app = builder.Build();
 

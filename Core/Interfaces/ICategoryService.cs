@@ -1,9 +1,4 @@
 ﻿using LearnNet_CatalogService.Core.DTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LearnNet_CatalogService.Core.Interfaces
 {
@@ -11,7 +6,7 @@ namespace LearnNet_CatalogService.Core.Interfaces
     {
         Task<IList<CategoryDTO>> GetAllCategoriesAsync();
 
-        Task<CategoryDTO> GetCategoryByIdAsync(int id);
+        Task<CategoryDTO?> GetCategoryByIdAsync(int id);
 
         Task<bool> AddCategoryAsync(CategoryDTO dto);
 

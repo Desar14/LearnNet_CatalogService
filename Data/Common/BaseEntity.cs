@@ -1,4 +1,4 @@
-﻿namespace LearnNet_CatalogService.Domain.Common
+﻿namespace LearnNet_CatalogService.Data.Common
 {
     public class BaseEntity
     {

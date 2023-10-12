@@ -1,7 +1,7 @@
-﻿using LearnNet_CatalogService.Domain.Entities;
+﻿using LearnNet_CatalogService.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace LearnNet_CatalogService.Infrastructure
+namespace LearnNet_CatalogService.DataAccessSQL
 {
     public class ApplicationDbContext : DbContext
     {
@@ -11,7 +11,7 @@ namespace LearnNet_CatalogService.Infrastructure
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
-            
+
         }
     }
 }

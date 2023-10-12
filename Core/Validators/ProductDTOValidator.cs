@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
 using LearnNet_CatalogService.Core.DTO;
 
-namespace LearnNet_CatalogService.Domain.Validators
+namespace LearnNet_CatalogService.Core.Validators
 {
     public class ProductDTOValidator : AbstractValidator<ProductDTO>
     {
-        public ProductDTOValidator() 
+        public ProductDTOValidator()
         {
             RuleFor(x => x.Name).NotEmpty().MaximumLength(50);
             RuleFor(x => x.CategoryId).NotEmpty();

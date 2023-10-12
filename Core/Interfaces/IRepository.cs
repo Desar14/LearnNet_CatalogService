@@ -1,4 +1,4 @@
-﻿using LearnNet_CatalogService.Domain.Common;
+﻿using LearnNet_CatalogService.Data.Common;
 using System.Linq.Expressions;
 
 namespace LearnNet_CatalogService.Core.Interfaces
@@ -10,5 +10,6 @@ namespace LearnNet_CatalogService.Core.Interfaces
         public Task Add(T entity);
         public Task Update(T entity);
         public Task Delete(int id);
+        public Task<int> Commit();
     }
 }

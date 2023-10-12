@@ -1,4 +1,4 @@
-﻿using LearnNet_CatalogService.Domain.Entities;
+﻿using LearnNet_CatalogService.Data.Entities;
 
 namespace LearnNet_CatalogService.Core.DTO
 {
