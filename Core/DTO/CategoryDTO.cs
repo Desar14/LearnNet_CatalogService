@@ -9,7 +9,7 @@ namespace LearnNet_CatalogService.Core.DTO
         public Uri? ImageUrl { get; set; }
 
         public CategoryDTO? ParentCategory { get; set; }
-        public int ParentCategoryId { get; set; }
+        public int? ParentCategoryId { get; set; }
 
         public static Category? MapTo(CategoryDTO? dto)
         {
@@ -30,7 +30,7 @@ namespace LearnNet_CatalogService.Core.DTO
             return entity;
         }
 
-        public static CategoryDTO? MapFrom(Category? entity) 
+        public static CategoryDTO? MapFrom(Category entity) 
         {
             if (entity == null)
             {
@@ -43,7 +43,7 @@ namespace LearnNet_CatalogService.Core.DTO
                 Name = entity.Name,
                 ImageUrl = entity.ImageUrl,
                 ParentCategoryId = entity.ParentCategoryId,
-                ParentCategory = MapFrom(entity.ParentCategory)
+                ParentCategory = entity.ParentCategory != null ? MapFrom(entity.ParentCategory) : null
             };
 
             return dto;

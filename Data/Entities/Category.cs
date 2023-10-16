@@ -7,6 +7,6 @@ namespace LearnNet_CatalogService.Data.Entities
         public required string Name { get; set; }
         public Uri? ImageUrl { get; set; }
         public Category? ParentCategory { get; set; }
-        public int ParentCategoryId { get; set; }
+        public int? ParentCategoryId { get; set; }
     }
 }

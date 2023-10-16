@@ -1,6 +1,7 @@
-
 using FluentValidation;
+using LearnNet_CatalogService.Core.DTO;
 using LearnNet_CatalogService.Core.Interfaces;
+using LearnNet_CatalogService.Core.Validators;
 using LearnNet_CatalogService.Data.Entities;
 using LearnNet_CatalogService.DataAccessSQL;
 using LearnNet_CatalogService.Domain.Services;
@@ -27,6 +28,8 @@ namespace LearnNet_CatalogService
 
             builder.Services.AddScoped<IRepository<Category>, Repository<Category>>();
             builder.Services.AddScoped<IRepository<Product>, Repository<Product>>();
+            builder.Services.AddScoped<IValidator<CategoryDTO>, CategoryDTOValidator>();
+            builder.Services.AddScoped<IValidator<ProductDTO>, ProductDTOValidator>();
             builder.Services.AddScoped<IValidator<Category>, CategoryValidator>();
             builder.Services.AddScoped<IValidator<Product>, ProductValidator>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();

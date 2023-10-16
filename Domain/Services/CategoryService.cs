@@ -32,25 +32,22 @@ namespace LearnNet_CatalogService.Domain.Services
                 throw new ValidationException(validationResult.Errors);
             }
 
-            await _repository.Add(entity);
-
-            var result = await _repository.Commit();
-
-            return result > 0;
+            return await _repository.Add(entity);
         }
 
         public async Task<bool> DeleteCategoryAsync(int categoryId)
         {
-            await _repository.Delete(categoryId);
-
-            var result = await _repository.Commit();
-
-            return result > 0;
+            return await _repository.Delete(categoryId); ;
         }
 
         public async Task<IList<CategoryDTO>> GetAllCategoriesAsync()
         {
             var entities = await _repository.GetAll();
+
+            if(entities == null)
+            {
+                return new List<CategoryDTO>();
+            }
 
             var result = entities.Select(CategoryDTO.MapFrom).ToList();
 
@@ -61,7 +58,7 @@ namespace LearnNet_CatalogService.Domain.Services
         {
             var entity = await _repository.GetById(id);
 
-            return CategoryDTO.MapFrom(entity);
+            return entity != null ? CategoryDTO.MapFrom(entity) : null;
         }
 
         public async Task<bool> UpdateCategoryAsync(CategoryDTO dto)
@@ -75,11 +72,7 @@ namespace LearnNet_CatalogService.Domain.Services
                 throw new ValidationException(validationResult.Errors);
             }
 
-            await _repository.Update(entity);
-
-            var result = await _repository.Commit();
-
-            return result > 0;
+            return await _repository.Update(entity);
         }
     }
 }

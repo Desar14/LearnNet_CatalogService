@@ -19,7 +19,7 @@ namespace LearnNet_CatalogService.DataAccessSQL
             _logger = logger;
         }
 
-        public async Task Add(T entity)
+        public async Task<bool> Add(T entity)
         {
             try
             {
@@ -30,14 +30,11 @@ namespace LearnNet_CatalogService.DataAccessSQL
                 _logger.LogError(ex, $"Repository {nameof(T)} add error");
                 throw;
             }
+
+            return await Commit();
         }
 
-        public async Task<int> Commit()
-        {
-            return await _dbContext.SaveChangesAsync();
-        }
-
-        public async Task Delete(int id)
+        public async Task<bool> Delete(int id)
         {
             try
             {
@@ -52,6 +49,8 @@ namespace LearnNet_CatalogService.DataAccessSQL
                 _logger.LogError(ex, $"Repository {nameof(T)} delete by id error");
                 throw;
             }
+
+            return await Commit();
         }
 
         public async Task<IQueryable<T>> GetAll()
@@ -91,12 +90,26 @@ namespace LearnNet_CatalogService.DataAccessSQL
             }
         }
 
-        public Task Update(T entity)
+        public async Task<bool> Update(T entity)
         {
             try
             {
                 _dbSet.Update(entity);
-                return Task.CompletedTask;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Repository {nameof(T)} update error");
+                throw;
+            }
+
+            return await Commit();
+        }
+
+        async Task<bool> Commit()
+        {
+            try
+            {
+                return (await _dbContext.SaveChangesAsync()) > 0;
             }
             catch (Exception ex)
             {

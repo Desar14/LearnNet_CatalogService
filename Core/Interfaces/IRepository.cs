@@ -7,9 +7,8 @@ namespace LearnNet_CatalogService.Core.Interfaces
     {
         public Task<IQueryable<T>> GetAll();
         public Task<T?> GetById(int id, params Expression<Func<T, object>>[] includes);
-        public Task Add(T entity);
-        public Task Update(T entity);
-        public Task Delete(int id);
-        public Task<int> Commit();
+        public Task<bool> Add(T entity);
+        public Task<bool> Update(T entity);
+        public Task<bool> Delete(int id);
     }
 }
