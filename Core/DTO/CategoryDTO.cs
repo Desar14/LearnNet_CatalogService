@@ -43,7 +43,7 @@ namespace LearnNet_CatalogService.Core.DTO
                 Name = entity.Name,
                 ImageUrl = entity.ImageUrl,
                 ParentCategoryId = entity.ParentCategoryId,
-                ParentCategory = entity.ParentCategory != null ? MapFrom(entity.ParentCategory) : null
+                ParentCategory = MapFrom(entity.ParentCategory)
             };
 
             return dto;

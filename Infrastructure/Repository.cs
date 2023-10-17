@@ -53,13 +53,11 @@ namespace LearnNet_CatalogService.DataAccessSQL
             return await Commit();
         }
 
-        public async Task<IQueryable<T>> GetAll()
+        public async Task<IEnumerable<T>> GetAll()
         {
             try
             {
-                IQueryable<T> query = _dbSet;
-
-                return query;
+                return await _dbSet.ToListAsync();
 
             }
             catch (Exception ex)
