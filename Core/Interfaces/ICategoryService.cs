@@ -8,7 +8,7 @@ namespace LearnNet_CatalogService.Core.Interfaces
 
         Task<CategoryDTO?> GetCategoryByIdAsync(int id);
 
-        Task<bool> AddCategoryAsync(CategoryDTO dto);
+        Task<int> AddCategoryAsync(CategoryDTO dto);
 
         Task<bool> UpdateCategoryAsync(CategoryDTO dto);
 

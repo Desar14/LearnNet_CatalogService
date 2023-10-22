@@ -21,7 +21,7 @@ namespace LearnNet_CatalogService.Domain.Services
             _categoryValidator = categoryValidator;
         }
 
-        public async Task<bool> AddCategoryAsync(CategoryDTO dto)
+        public async Task<int> AddCategoryAsync(CategoryDTO dto)
         {
             var entity = CategoryDTO.MapTo(dto) ?? throw new ArgumentNullException(nameof(dto));
             

@@ -1,6 +1,7 @@
 ﻿using LearnNet_CatalogService.Core.Interfaces;
 using LearnNet_CatalogService.Data.Common;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 
@@ -19,11 +20,13 @@ namespace LearnNet_CatalogService.DataAccessSQL
             _logger = logger;
         }
 
-        public async Task<bool> Add(T entity)
+        public async Task<int> Add(T entity)
         {
+            EntityEntry<T> addedEntity = null;
             try
             {
-                await _dbSet.AddAsync(entity);
+                addedEntity = await _dbSet.AddAsync(entity);
+                await Commit();
             }
             catch (Exception ex)
             {
@@ -31,7 +34,7 @@ namespace LearnNet_CatalogService.DataAccessSQL
                 throw;
             }
 
-            return await Commit();
+            return addedEntity.Entity.Id;
         }
 
         public async Task<bool> Delete(int id)
@@ -51,6 +54,26 @@ namespace LearnNet_CatalogService.DataAccessSQL
             }
 
             return await Commit();
+        }
+
+        public async Task<IEnumerable<T>> Get(Expression<Func<T, bool>>? filter = null, int page = 0, int limit = 50)
+        {
+            try
+            {
+                IQueryable<T> query = _dbSet;
+
+                if (filter != null)
+                {
+                    query = query.Where(filter);
+                }
+
+                return await query.Skip(limit*page).Take(limit).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Repository {nameof(T)} get error");
+                throw;
+            }
         }
 
         public async Task<IEnumerable<T>> GetAll()

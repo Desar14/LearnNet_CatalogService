@@ -32,7 +32,7 @@ namespace LearnNet_CatalogService.DataAccessSQL
 
             modelBuilder.Entity<Product>()
                 .Property(b => b.Price)
-                    .HasPrecision(2,14)
+                    .HasPrecision(14,2)
                     .IsRequired();
 
             modelBuilder.Entity<Product>()

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LearnNet_CatalogService.DataAccessSQL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231016204928_InitialCreate")]
+    [Migration("20231022172137_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -101,8 +101,8 @@ namespace LearnNet_CatalogService.DataAccessSQL.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<decimal>("Price")
-                        .HasPrecision(2, 14)
-                        .HasColumnType("decimal(2,14)");
+                        .HasPrecision(14, 2)
+                        .HasColumnType("decimal(14,2)");
 
                     b.HasKey("Id");
 

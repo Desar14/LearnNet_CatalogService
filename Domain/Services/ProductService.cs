@@ -26,7 +26,7 @@ namespace LearnNet_CatalogService.Domain.Services
             _categoryValidator = categoryValidator;
         }
 
-        public async Task<bool> AddProductAsync(ProductDTO dto)
+        public async Task<int> AddProductAsync(ProductDTO dto)
         {
             var entity = ProductDTO.MapTo(dto) ?? throw new ArgumentNullException(nameof(dto));
 
@@ -37,7 +37,7 @@ namespace LearnNet_CatalogService.Domain.Services
                 throw new ValidationException(validationResult.Errors);
             }
 
-            return await _repository.Add(entity); ;
+            return await _repository.Add(entity);
         }
 
         public async Task<bool> DeleteProductAsync(int productId)
@@ -52,6 +52,13 @@ namespace LearnNet_CatalogService.Domain.Services
             var result = entities.Select(ProductDTO.MapFrom).ToList();
 
             return result;
+        }
+
+        public async Task<IList<ProductDTO>> GetAllProductsByCategoryIdAsync(int categoryId, int page = 0, int limit = 50)
+        {
+            var productEntities = await _repository.Get(x => x.CategoryId == categoryId, page, limit);
+
+            return productEntities.Select(ProductDTO.MapFrom).ToList();
         }
 
         public async Task<ProductDTO?> GetProductByIdAsync(int id)
