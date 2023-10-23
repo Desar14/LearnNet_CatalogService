@@ -57,7 +57,7 @@ namespace LearnNet_CatalogService.DataAccessSQL.Migrations
 
                     b.HasIndex("ParentCategoryId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("LearnNet_CatalogService.Data.Entities.Product", b =>
@@ -105,7 +105,7 @@ namespace LearnNet_CatalogService.DataAccessSQL.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("LearnNet_CatalogService.Data.Entities.Category", b =>

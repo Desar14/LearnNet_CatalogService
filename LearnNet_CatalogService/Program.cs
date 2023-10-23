@@ -8,7 +8,7 @@ using LearnNet_CatalogService.Domain.Services;
 using LearnNet_CatalogService.Domain.Validators;
 using Microsoft.EntityFrameworkCore;
 
-namespace LearnNet_CatalogService
+namespace LearnNet_CatalogService.Api
 {
     public class Program
     {
@@ -26,12 +26,12 @@ namespace LearnNet_CatalogService
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddScoped<IRepository<Category>, Repository<Category>>();
-            builder.Services.AddScoped<IRepository<Product>, Repository<Product>>();
+            builder.Services.AddScoped<IRepository<Category<int>, int>, Repository<Category<int>, int>>();
+            builder.Services.AddScoped<IRepository<Product<int>, int>, Repository<Product<int>, int>>();
             builder.Services.AddScoped<IValidator<CategoryDTO>, CategoryDTOValidator>();
             builder.Services.AddScoped<IValidator<ProductDTO>, ProductDTOValidator>();
-            builder.Services.AddScoped<IValidator<Category>, CategoryValidator>();
-            builder.Services.AddScoped<IValidator<Product>, ProductValidator>();
+            builder.Services.AddScoped<IValidator<Category<int>>, CategoryValidator>();
+            builder.Services.AddScoped<IValidator<Product<int>>, ProductValidator>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<IProductService, ProductService>();
 

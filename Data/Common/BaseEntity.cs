@@ -3,10 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace LearnNet_CatalogService.Data.Common
 {
-    public class BaseEntity
+    public class BaseEntity<T> where T : struct
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public T Id { get; set; }
     }
 }

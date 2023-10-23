@@ -1,7 +1,6 @@
 ﻿using LearnNet_CatalogService.Core.DTO;
-using LearnNet_CatalogService.HATEOAS;
 
-namespace LearnNet_CatalogService.Models.Category
+namespace LearnNet_CatalogService.Api.Models.Category
 {
     public class CategoryWriteModel
     {
@@ -9,7 +8,7 @@ namespace LearnNet_CatalogService.Models.Category
         public Uri? ImageUrl { get; set; }
         public int? ParentCategoryId { get; set; }
 
-       public static CategoryDTO MapTo(CategoryWriteModel model)
+        public static CategoryDTO MapTo(CategoryWriteModel model)
         {
             var dto = new CategoryDTO
             {

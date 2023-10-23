@@ -7,20 +7,21 @@ using System.Linq.Expressions;
 
 namespace LearnNet_CatalogService.DataAccessSQL
 {
-    public class Repository<T> : IRepository<T> where T : BaseEntity
+    public class Repository<T, TKey> : IRepository<T, TKey> where T : BaseEntity<TKey>
+                                                            where TKey : struct
     {
         protected readonly ApplicationDbContext _dbContext;
         protected readonly DbSet<T> _dbSet;
-        protected readonly ILogger<Repository<T>> _logger;
+        protected readonly ILogger<Repository<T, TKey>> _logger;
 
-        public Repository(ApplicationDbContext db, ILogger<Repository<T>> logger)
+        public Repository(ApplicationDbContext db, ILogger<Repository<T, TKey>> logger)
         {
             _dbContext = db;
             _dbSet = _dbContext.Set<T>();
             _logger = logger;
         }
 
-        public async Task<int> Add(T entity)
+        public async Task<T> Add(T entity)
         {
             EntityEntry<T> addedEntity = null;
             try
@@ -34,7 +35,7 @@ namespace LearnNet_CatalogService.DataAccessSQL
                 throw;
             }
 
-            return addedEntity.Entity.Id;
+            return addedEntity.Entity;
         }
 
         public async Task<bool> Delete(int id)
@@ -56,7 +57,7 @@ namespace LearnNet_CatalogService.DataAccessSQL
             return await Commit();
         }
 
-        public async Task<IEnumerable<T>> Get(Expression<Func<T, bool>>? filter = null, int page = 0, int limit = 50)
+        public async Task<IList<T>> Get(Expression<Func<T, bool>>? filter = null, int page = 0, int limit = 50)
         {
             try
             {
@@ -76,7 +77,7 @@ namespace LearnNet_CatalogService.DataAccessSQL
             }
         }
 
-        public async Task<IEnumerable<T>> GetAll()
+        public async Task<IList<T>> GetAll()
         {
             try
             {

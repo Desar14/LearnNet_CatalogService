@@ -10,7 +10,7 @@ namespace LearnNet_CatalogService.Core.Interfaces
 
         Task<ProductDTO?> GetProductByIdAsync(int id);
 
-        Task<int> AddProductAsync(ProductDTO dto);
+        Task<ProductDTO> AddProductAsync(ProductDTO dto);
 
         Task<bool> UpdateProductAsync(ProductDTO dto);
 

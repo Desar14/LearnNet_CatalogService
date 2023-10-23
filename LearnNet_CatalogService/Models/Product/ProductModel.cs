@@ -1,7 +1,7 @@
-﻿using LearnNet_CatalogService.Core.DTO;
-using LearnNet_CatalogService.HATEOAS;
+﻿using LearnNet_CatalogService.Api.Models.HATEOAS;
+using LearnNet_CatalogService.Core.DTO;
 
-namespace LearnNet_CatalogService.Models.Product
+namespace LearnNet_CatalogService.Api.Models.Product
 {
     public class ProductModel
     {

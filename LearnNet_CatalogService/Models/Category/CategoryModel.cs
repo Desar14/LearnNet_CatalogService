@@ -1,7 +1,7 @@
-﻿using LearnNet_CatalogService.Core.DTO;
-using LearnNet_CatalogService.HATEOAS;
+﻿using LearnNet_CatalogService.Api.Models.HATEOAS;
+using LearnNet_CatalogService.Core.DTO;
 
-namespace LearnNet_CatalogService.Models.Category
+namespace LearnNet_CatalogService.Api.Models.Category
 {
     public class CategoryModel
     {
@@ -9,7 +9,7 @@ namespace LearnNet_CatalogService.Models.Category
         public required string Name { get; set; }
         public Uri? ImageUrl { get; set; }
         public int? ParentCategoryId { get; set; }
-        public IList<Link> Links {get; set; }
+        public IList<Link> Links { get; set; }
 
         public static CategoryModel MapFrom(CategoryDTO dto)
         {

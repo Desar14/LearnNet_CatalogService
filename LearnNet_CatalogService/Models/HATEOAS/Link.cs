@@ -1,4 +1,4 @@
-﻿namespace LearnNet_CatalogService.HATEOAS
+﻿namespace LearnNet_CatalogService.Api.Models.HATEOAS
 {
     public class Link
     {

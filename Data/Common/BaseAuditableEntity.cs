@@ -1,6 +1,6 @@
 ﻿namespace LearnNet_CatalogService.Data.Common
 {
-    public abstract class BaseAuditableEntity : BaseEntity
+    public abstract class BaseAuditableEntity<TKey> : BaseEntity<TKey> where TKey : struct
     {
         public DateTimeOffset Created { get; set; }
 

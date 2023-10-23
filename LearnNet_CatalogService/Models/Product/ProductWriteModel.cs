@@ -1,7 +1,6 @@
 ﻿using LearnNet_CatalogService.Core.DTO;
-using LearnNet_CatalogService.HATEOAS;
 
-namespace LearnNet_CatalogService.Models.Product
+namespace LearnNet_CatalogService.Api.Models.Product
 {
     public class ProductWriteModel
     {

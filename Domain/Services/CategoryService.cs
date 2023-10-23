@@ -8,20 +8,20 @@ namespace LearnNet_CatalogService.Domain.Services
 {
     public class CategoryService : ICategoryService
     {
-        private readonly IRepository<Category> _repository;
+        private readonly IRepository<Category<int>, int> _repository;
         private readonly ILogger<CategoryService> _logger;
-        private readonly IValidator<Category> _categoryValidator;
+        private readonly IValidator<Category<int>> _categoryValidator;
 
-        public CategoryService(IRepository<Category> repository,
+        public CategoryService(IRepository<Category<int>, int> repository,
                                ILogger<CategoryService> logger,
-                               IValidator<Category> categoryValidator)
+                               IValidator<Category<int>> categoryValidator)
         {
             _repository = repository;
             _logger = logger;
             _categoryValidator = categoryValidator;
         }
 
-        public async Task<int> AddCategoryAsync(CategoryDTO dto)
+        public async Task<CategoryDTO> AddCategoryAsync(CategoryDTO dto)
         {
             var entity = CategoryDTO.MapTo(dto) ?? throw new ArgumentNullException(nameof(dto));
             
@@ -31,8 +31,9 @@ namespace LearnNet_CatalogService.Domain.Services
             {
                 throw new ValidationException(validationResult.Errors);
             }
+            var addedEntity = await _repository.Add(entity);
 
-            return await _repository.Add(entity);
+            return CategoryDTO.MapFrom(addedEntity);
         }
 
         public async Task<bool> DeleteCategoryAsync(int categoryId)

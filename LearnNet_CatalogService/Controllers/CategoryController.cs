@@ -1,13 +1,14 @@
 ﻿using FluentValidation;
+using LearnNet_CatalogService.Api.Models.Category;
+using LearnNet_CatalogService.Api.Models.HATEOAS;
+using LearnNet_CatalogService.Api.Models.Product;
 using LearnNet_CatalogService.Core.DTO;
 using LearnNet_CatalogService.Core.Interfaces;
-using LearnNet_CatalogService.HATEOAS;
-using LearnNet_CatalogService.Models.Category;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace LearnNet_CatalogService.Controllers
+namespace LearnNet_CatalogService.Api.Controllers
 {
     [Route("api/category")]
     [ApiController]
@@ -31,6 +32,9 @@ namespace LearnNet_CatalogService.Controllers
 
         // GET: api/<CategoryController>
         [HttpGet]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(LinkCollectionWrapper<CategoryModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Get()
         {
             var categoriesDto = await _categoryService.GetAllCategoriesAsync();
@@ -42,7 +46,7 @@ namespace LearnNet_CatalogService.Controllers
                 category.Links = links.ToList();
             }
 
-           
+
             var categoriesWrapper = new LinkCollectionWrapper<CategoryModel>(categoryModels);
             return Ok(CreateLinksForGetAllCategories(categoriesWrapper));
 
@@ -50,6 +54,10 @@ namespace LearnNet_CatalogService.Controllers
 
         // GET api/<CategoryController>/5
         [HttpGet("{id}")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(CategoryModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetById(int id)
         {
             var categoryDto = await _categoryService.GetCategoryByIdAsync(id);
@@ -65,6 +73,12 @@ namespace LearnNet_CatalogService.Controllers
 
         // POST api/<CategoryController>
         [HttpPost]
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(CategoryModel), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Post([FromBody] CategoryWriteModel model)
         {
             if (model == null)
@@ -73,16 +87,16 @@ namespace LearnNet_CatalogService.Controllers
             var dto = CategoryWriteModel.MapTo(model);
 
             var validationResult = _validator.Validate(dto);
-            if (!validationResult.IsValid) 
+            if (!validationResult.IsValid)
             {
                 return BadRequest(validationResult.Errors.Select(x => x.ErrorMessage).ToList());
             }
 
-            int addedId = -1;
+            CategoryDTO? addedDto = null;
 
             try
             {
-                addedId = await _categoryService.AddCategoryAsync(dto);
+                addedDto = await _categoryService.AddCategoryAsync(dto);
             }
             catch (Exception ex)
             {
@@ -90,16 +104,25 @@ namespace LearnNet_CatalogService.Controllers
                 throw;
             }
 
-            if (addedId == -1)
+            if (addedDto == null)
             {
                 return StatusCode(500);
             }
 
-            return await GetById(addedId);
+            var addedModel = CategoryModel.MapFrom(addedDto);
+            addedModel.Links = CreateLinksForCategory(addedModel.Id).ToList();
+
+            return Created(nameof(GetById), addedModel);
         }
 
         // PUT api/<CategoryController>/5
         [HttpPut("{id}")]
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(CategoryModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Update(int id, [FromBody] CategoryWriteModel model)
         {
             var categoryDto = await _categoryService.GetCategoryByIdAsync(id);
@@ -128,7 +151,7 @@ namespace LearnNet_CatalogService.Controllers
                 _logger.LogError(ex, $"Update category error");
                 throw;
             }
-            
+
             if (!addedSuccess)
             {
                 return StatusCode(500);
@@ -139,6 +162,10 @@ namespace LearnNet_CatalogService.Controllers
 
         // DELETE api/<CategoryController>/5
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Delete(int id)
         {
             var categoryDto = await _categoryService.GetCategoryByIdAsync(id);

@@ -11,14 +11,14 @@ namespace LearnNet_CatalogService.Core.DTO
         public CategoryDTO? ParentCategory { get; set; }
         public int? ParentCategoryId { get; set; }
 
-        public static Category? MapTo(CategoryDTO? dto)
+        public static Category<int>? MapTo(CategoryDTO? dto)
         {
             if (dto == null)
             {
                 return null;
             }
 
-            var entity = new Category
+            var entity = new Category<int>
             {
                 Id = dto.Id,
                 Name = dto.Name,
@@ -30,7 +30,7 @@ namespace LearnNet_CatalogService.Core.DTO
             return entity;
         }
 
-        public static CategoryDTO? MapFrom(Category entity) 
+        public static CategoryDTO? MapFrom(Category<int> entity) 
         {
             if (entity == null)
             {
