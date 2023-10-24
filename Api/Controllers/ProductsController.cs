@@ -19,26 +19,22 @@ namespace LearnNet_CatalogService.Api.Controllers
         private readonly IProductService _productService;
         private readonly ILogger<ProductsController> _logger;
         private readonly LinkGenerator _linkGenerator;
-        private readonly IValidator<ProductDTO> _validator;
 
         public ProductsController(ICategoryService categoryService,
                                   IProductService productService,
                                   ILogger<ProductsController> logger,
-                                  LinkGenerator linkGenerator,
-                                  IValidator<ProductDTO> validator)
+                                  LinkGenerator linkGenerator)
         {
             _categoryService = categoryService;
             _productService = productService;
             _logger = logger;
             _linkGenerator = linkGenerator;
-            _validator = validator;
         }
 
         // GET: api/<ProductsController>
         [HttpGet]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(LinkCollectionWrapper<ProductModel>) ,StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(LinkCollectionWrapper<ProductModel>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Get(int categoryId, int page = 0, int limit = 50)
         {
             var dTOs = await _productService.GetAllProductsByCategoryIdAsync(categoryId, page, limit);
@@ -61,7 +57,6 @@ namespace LearnNet_CatalogService.Api.Controllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(ProductModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetById(int categoryId, int id)
         {
             var productDto = await _productService.GetProductByIdAsync(id);
@@ -83,7 +78,6 @@ namespace LearnNet_CatalogService.Api.Controllers
         [ProducesResponseType(typeof(ProductModel), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Post(int categoryId, [FromBody] ProductWriteModel model)
         {
             var categoryDto = await _categoryService.GetCategoryByIdAsync(categoryId);
@@ -91,17 +85,8 @@ namespace LearnNet_CatalogService.Api.Controllers
             if (categoryDto == null)
                 return NotFound();
 
-            if (model == null)
-                return BadRequest();
-
             var dto = ProductWriteModel.MapTo(model);
             dto.CategoryId = categoryId;
-
-            var validationResult = _validator.Validate(dto);
-            if (!validationResult.IsValid)
-            {
-                return BadRequest(validationResult.Errors.Select(x => x.ErrorMessage).ToList());
-            }
 
             ProductDTO? addedDto = null;
 
@@ -113,11 +98,6 @@ namespace LearnNet_CatalogService.Api.Controllers
             {
                 _logger.LogError(ex, $"Add product error");
                 throw;
-            }
-
-            if (addedDto == null)
-            {
-                return StatusCode(500);
             }
 
             var addedModel = ProductModel.MapFrom(addedDto);
@@ -133,7 +113,6 @@ namespace LearnNet_CatalogService.Api.Controllers
         [ProducesResponseType(typeof(ProductModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Update(int categoryId, int id, [FromBody] ProductWriteModel model)
         {
             var categoryDto = await _categoryService.GetCategoryByIdAsync(categoryId);
@@ -146,29 +125,16 @@ namespace LearnNet_CatalogService.Api.Controllers
             var dto = ProductWriteModel.MapTo(model);
             dto.CategoryId = categoryId;
 
-            var validationResult = _validator.Validate(dto);
-            if (!validationResult.IsValid)
-            {
-                return BadRequest(validationResult.Errors.Select(x => x.ErrorMessage).ToList());
-            }
-
-            bool addedSuccess = false;
-
             dto.Id = id;
 
             try
             {
-                addedSuccess = await _productService.UpdateProductAsync(dto);
+                await _productService.UpdateProductAsync(dto);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Update category error");
                 throw;
-            }
-
-            if (!addedSuccess)
-            {
-                return StatusCode(500);
             }
 
             return await GetById(categoryId, id);
@@ -179,7 +145,6 @@ namespace LearnNet_CatalogService.Api.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Delete(int categoryId, int id)
         {
             var categoryDto = await _categoryService.GetCategoryByIdAsync(categoryId);
@@ -188,12 +153,7 @@ namespace LearnNet_CatalogService.Api.Controllers
             if (categoryDto == null || productDto == null)
                 return NotFound();
 
-            var result = await _productService.DeleteProductAsync(id);
-
-            if (!result)
-            {
-                return StatusCode(500);
-            }
+            await _productService.DeleteProductAsync(id);
 
             return NoContent();
         }

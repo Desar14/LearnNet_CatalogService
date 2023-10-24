@@ -1,4 +1,7 @@
 using FluentValidation;
+using LearnNet_CatalogService.Api.Models.Category;
+using LearnNet_CatalogService.Api.Models.Product;
+using LearnNet_CatalogService.Api.Validators;
 using LearnNet_CatalogService.Core.DTO;
 using LearnNet_CatalogService.Core.Interfaces;
 using LearnNet_CatalogService.Core.Validators;
@@ -7,6 +10,7 @@ using LearnNet_CatalogService.DataAccessSQL;
 using LearnNet_CatalogService.Domain.Services;
 using LearnNet_CatalogService.Domain.Validators;
 using Microsoft.EntityFrameworkCore;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 
 namespace LearnNet_CatalogService.Api
 {
@@ -28,12 +32,14 @@ namespace LearnNet_CatalogService.Api
 
             builder.Services.AddScoped<IRepository<Category<int>, int>, Repository<Category<int>, int>>();
             builder.Services.AddScoped<IRepository<Product<int>, int>, Repository<Product<int>, int>>();
-            builder.Services.AddScoped<IValidator<CategoryDTO>, CategoryDTOValidator>();
-            builder.Services.AddScoped<IValidator<ProductDTO>, ProductDTOValidator>();
+            builder.Services.AddScoped<IValidator<CategoryWriteModel>, CategoryWriteModelValidator>();
+            builder.Services.AddScoped<IValidator<ProductWriteModel>, ProductWriteModelValidator>();
             builder.Services.AddScoped<IValidator<Category<int>>, CategoryValidator>();
             builder.Services.AddScoped<IValidator<Product<int>>, ProductValidator>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<IProductService, ProductService>();
+
+            builder.Services.AddFluentValidationAutoValidation();
 
             var app = builder.Build();
 
