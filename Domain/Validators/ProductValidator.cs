@@ -3,7 +3,7 @@ using LearnNet_CatalogService.Data.Entities;
 
 namespace LearnNet_CatalogService.Domain.Validators
 {
-    public class ProductValidator : AbstractValidator<Product<int>>
+    public class ProductValidator : AbstractValidator<Product>
     {
         public ProductValidator() 
         {

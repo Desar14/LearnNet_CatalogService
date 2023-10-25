@@ -5,8 +5,8 @@ namespace LearnNet_CatalogService.DataAccessSQL
 {
     public class ApplicationDbContext : DbContext
     {
-        public DbSet<Category<int>> Categories { get; set; }
-        public DbSet<Product<int>> Products { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Product> Products { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -16,37 +16,37 @@ namespace LearnNet_CatalogService.DataAccessSQL
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Category<int>>()
+            modelBuilder.Entity<Category>()
                 .HasKey(c => c.Id);
-            modelBuilder.Entity<Category<int>>()
+            modelBuilder.Entity<Category>()
                 .Property(c => c.Id)
                 .ValueGeneratedOnAdd();
 
-            modelBuilder.Entity<Category<int>>()
+            modelBuilder.Entity<Category>()
                 .Property(b => b.Name)
                     .IsRequired()
                     .HasMaxLength(50);
 
-            modelBuilder.Entity<Product<int>>()
+            modelBuilder.Entity<Product>()
                 .HasKey(c => c.Id);
-            modelBuilder.Entity<Product<int>>()
+            modelBuilder.Entity<Product>()
                 .Property(c => c.Id)
                 .ValueGeneratedOnAdd();
 
-            modelBuilder.Entity<Product<int>>()
+            modelBuilder.Entity<Product>()
                 .Property(b =>b.Name)
                     .IsRequired()
                     .HasMaxLength(50);
 
-            modelBuilder.Entity<Product<int>>()
+            modelBuilder.Entity<Product>()
                 .HasOne(e => e.Category);
 
-            modelBuilder.Entity<Product<int>>()
+            modelBuilder.Entity<Product>()
                 .Property(b => b.Price)
                     .HasPrecision(14,2)
                     .IsRequired();
 
-            modelBuilder.Entity<Product<int>>()
+            modelBuilder.Entity<Product>()
                 .Property(b => b.Amount)
                     .IsRequired();
         }

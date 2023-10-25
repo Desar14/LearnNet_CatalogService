@@ -13,9 +13,9 @@ namespace LearnNet_CatalogService.Core.DTO
         public decimal Price { get; set; }
         public int Amount { get; set; }
 
-        public static Product<int>? MapTo(ProductDTO dto)
+        public static Product? MapTo(ProductDTO dto)
         {
-            var entity = new Product<int>
+            var entity = new Product
             {
                 Id = dto.Id,
                 Name = dto.Name,
@@ -30,7 +30,7 @@ namespace LearnNet_CatalogService.Core.DTO
             return entity;
         }
 
-        public static ProductDTO MapFrom(Product<int> entity)
+        public static ProductDTO MapFrom(Product entity)
         {
             var dto = new ProductDTO
             {

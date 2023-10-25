@@ -4,7 +4,10 @@ using LearnNet_CatalogService.Api.Models.HATEOAS;
 using LearnNet_CatalogService.Api.Models.Product;
 using LearnNet_CatalogService.Core.DTO;
 using LearnNet_CatalogService.Core.Interfaces;
+using LearnNet_CatalogService.Data.Entities;
+using LearnNet_CatalogService.Domain.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -15,17 +18,22 @@ namespace LearnNet_CatalogService.Api.Controllers
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
+        private readonly IProductService _productService;
         private readonly ILogger<CategoryController> _logger;
         private readonly LinkGenerator _linkGenerator;
 
         public CategoryController(ICategoryService categoryService,
                                   ILogger<CategoryController> logger,
-                                  LinkGenerator linkGenerator)
+                                  LinkGenerator linkGenerator,
+                                  IProductService productService)
         {
             _categoryService = categoryService;
             _logger = logger;
             _linkGenerator = linkGenerator;
+            _productService = productService;
         }
+
+
 
         // GET: api/<CategoryController>
         [HttpGet]
@@ -65,6 +73,23 @@ namespace LearnNet_CatalogService.Api.Controllers
             return Ok(model);
         }
 
+        [HttpGet("{id}/products")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(CategoryModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetProductsByCategoryId(int id, int page = 0, int limit = 50)
+        {
+            var categoryDto = await _categoryService.GetCategoryByIdAsync(id);
+
+            if (categoryDto == null)
+                return BadRequest();
+
+            var dTOs = await _productService.GetAllProductsByCategoryIdAsync(id, page, limit);
+            var models = dTOs.Select(ProductModel.MapFrom).ToList();
+
+            return Ok(models);
+        }
+
         // POST api/<CategoryController>
         [HttpPost]
         [Consumes("application/json")]
@@ -75,23 +100,8 @@ namespace LearnNet_CatalogService.Api.Controllers
         public async Task<IActionResult> Post([FromBody] CategoryWriteModel model)
         {
             var dto = CategoryWriteModel.MapTo(model);
-
-            CategoryDTO? addedDto = null;
-
-            try
-            {
-                addedDto = await _categoryService.AddCategoryAsync(dto);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Add category error");
-                throw;
-            }
-
-            if (addedDto == null)
-            {
-                return StatusCode(500);
-            }
+           
+            CategoryDTO addedDto = await _categoryService.AddCategoryAsync(dto);           
 
             var addedModel = CategoryModel.MapFrom(addedDto);
             addedModel.Links = CreateLinksForCategory(addedModel.Id).ToList();
@@ -116,32 +126,17 @@ namespace LearnNet_CatalogService.Api.Controllers
             var dto = CategoryWriteModel.MapTo(model);
 
             dto.Id = id;
-
-            try
-            {
-                await _categoryService.UpdateCategoryAsync(dto);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Update category error");
-                throw;
-            }
-
+            
+            await _categoryService.UpdateCategoryAsync(dto);
+            
             return await GetById(id);
         }
 
         // DELETE api/<CategoryController>/5
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Delete(int id)
         {
-            var categoryDto = await _categoryService.GetCategoryByIdAsync(id);
-
-            if (categoryDto == null)
-                return NotFound();
-
             await _categoryService.DeleteCategoryAsync(id);
 
             return NoContent();

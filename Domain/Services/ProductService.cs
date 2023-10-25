@@ -8,13 +8,13 @@ namespace LearnNet_CatalogService.Domain.Services
 {
     public class ProductService : IProductService
     {
-        private readonly IRepository<Product<int>,int> _repository;
+        private readonly IRepository<Product,int> _repository;
         private readonly ILogger<ProductService> _logger;
-        private readonly IValidator<Product<int>> _categoryValidator;
+        private readonly IValidator<Product> _categoryValidator;
 
-        public ProductService(IRepository<Product<int>, int> repository,
+        public ProductService(IRepository<Product, int> repository,
                               ILogger<ProductService> logger,
-                              IValidator<Product<int>> categoryValidator)
+                              IValidator<Product> categoryValidator)
         {
             _repository = repository;
             _logger = logger;
@@ -51,9 +51,18 @@ namespace LearnNet_CatalogService.Domain.Services
             return result;
         }
 
-        public async Task<IList<ProductDTO>> GetAllProductsByCategoryIdAsync(int categoryId, int page = 0, int limit = 50)
+        public async Task<IList<ProductDTO>> GetAllProductsByCategoryIdAsync(int? categoryId, int page = 0, int limit = 50)
         {
-            var productEntities = await _repository.Get(x => x.CategoryId == categoryId, page, limit);
+            IList<Product> productEntities;
+            if (categoryId != null)
+            {
+                productEntities = await _repository.Get(x => x.CategoryId == categoryId, page, limit);
+            }
+            else
+            {
+                productEntities = await _repository.Get(null, page, limit);
+            }
+            
 
             return productEntities.Select(ProductDTO.MapFrom).ToList();
         }

@@ -7,6 +7,7 @@ namespace LearnNet_CatalogService.Api.Models.Product
         public required string Name { get; set; }
         public string? Description { get; set; }
         public Uri? ImageUrl { get; set; }
+        public int CategoryId { get; set; }
         public decimal Price { get; set; }
         public int Amount { get; set; }
 
@@ -17,7 +18,7 @@ namespace LearnNet_CatalogService.Api.Models.Product
                 Name = model.Name,
                 Description = model.Description,
                 ImageUrl = model.ImageUrl,
-                CategoryId = 0,
+                CategoryId = model.CategoryId,
                 Price = model.Price,
                 Amount = model.Amount
             };

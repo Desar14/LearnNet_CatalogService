@@ -28,12 +28,12 @@ namespace LearnNet_CatalogService.Api
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddScoped<IRepository<Category<int>, int>, Repository<Category<int>, int>>();
-            builder.Services.AddScoped<IRepository<Product<int>, int>, Repository<Product<int>, int>>();
+            builder.Services.AddScoped<IRepository<Category, int>, Repository<Category, int>>();
+            builder.Services.AddScoped<IRepository<Product, int>, Repository<Product, int>>();
             builder.Services.AddScoped<IValidator<CategoryWriteModel>, CategoryWriteModelValidator>();
             builder.Services.AddScoped<IValidator<ProductWriteModel>, ProductWriteModelValidator>();
-            builder.Services.AddScoped<IValidator<Category<int>>, CategoryValidator>();
-            builder.Services.AddScoped<IValidator<Product<int>>, ProductValidator>();
+            builder.Services.AddScoped<IValidator<Category>, CategoryValidator>();
+            builder.Services.AddScoped<IValidator<Product>, ProductValidator>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<IProductService, ProductService>();
 

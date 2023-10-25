@@ -8,13 +8,13 @@ namespace LearnNet_CatalogService.Domain.Services
 {
     public class CategoryService : ICategoryService
     {
-        private readonly IRepository<Category<int>, int> _repository;
+        private readonly IRepository<Category, int> _repository;
         private readonly ILogger<CategoryService> _logger;
-        private readonly IValidator<Category<int>> _categoryValidator;
+        private readonly IValidator<Category> _categoryValidator;
 
-        public CategoryService(IRepository<Category<int>, int> repository,
+        public CategoryService(IRepository<Category, int> repository,
                                ILogger<CategoryService> logger,
-                               IValidator<Category<int>> categoryValidator)
+                               IValidator<Category> categoryValidator)
         {
             _repository = repository;
             _logger = logger;
