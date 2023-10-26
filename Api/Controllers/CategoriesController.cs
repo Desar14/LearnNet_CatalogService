@@ -1,29 +1,25 @@
-﻿using FluentValidation;
-using LearnNet_CatalogService.Api.Models.Category;
+﻿using LearnNet_CatalogService.Api.Models.Category;
 using LearnNet_CatalogService.Api.Models.HATEOAS;
 using LearnNet_CatalogService.Api.Models.Product;
 using LearnNet_CatalogService.Core.DTO;
 using LearnNet_CatalogService.Core.Interfaces;
-using LearnNet_CatalogService.Data.Entities;
-using LearnNet_CatalogService.Domain.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace LearnNet_CatalogService.Api.Controllers
 {
-    [Route("api/category")]
+    [Route("api/categories")]
     [ApiController]
-    public class CategoryController : ControllerBase
+    public class CategoriesController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
         private readonly IProductService _productService;
-        private readonly ILogger<CategoryController> _logger;
+        private readonly ILogger<CategoriesController> _logger;
         private readonly LinkGenerator _linkGenerator;
 
-        public CategoryController(ICategoryService categoryService,
-                                  ILogger<CategoryController> logger,
+        public CategoriesController(ICategoryService categoryService,
+                                  ILogger<CategoriesController> logger,
                                   LinkGenerator linkGenerator,
                                   IProductService productService)
         {
@@ -95,8 +91,8 @@ namespace LearnNet_CatalogService.Api.Controllers
         [Consumes("application/json")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(CategoryModel), StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Post([FromBody] CategoryWriteModel model)
         {
             var dto = CategoryWriteModel.MapTo(model);
@@ -114,8 +110,8 @@ namespace LearnNet_CatalogService.Api.Controllers
         [Consumes("application/json")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(CategoryModel), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Update(int id, [FromBody] CategoryWriteModel model)
         {
             var categoryDto = await _categoryService.GetCategoryByIdAsync(id);
