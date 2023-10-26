@@ -2,7 +2,7 @@
 
 namespace LearnNet_CatalogService.Data.Entities
 {
-    public class Category : BaseAuditableEntity
+    public class Category : BaseAuditableEntity<int>
     {
         public required string Name { get; set; }
         public Uri? ImageUrl { get; set; }

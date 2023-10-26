@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LearnNet_CatalogService", "LearnNet_CatalogService\LearnNet_CatalogService.csproj", "{1F1B8BC4-FDFE-4F0A-A86D-84E66B4A63E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LearnNet_CatalogService.Api", "Api\LearnNet_CatalogService.Api.csproj", "{1F1B8BC4-FDFE-4F0A-A86D-84E66B4A63E9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LearnNet_CatalogService.Domain", "Domain\LearnNet_CatalogService.Domain.csproj", "{D57B803C-BD0F-4FF7-8080-1D9135F69233}"
 EndProject

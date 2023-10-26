@@ -1,14 +1,16 @@
 using FluentValidation;
-using LearnNet_CatalogService.Core.DTO;
+using LearnNet_CatalogService.Api.Models.Category;
+using LearnNet_CatalogService.Api.Models.Product;
+using LearnNet_CatalogService.Api.Validators;
 using LearnNet_CatalogService.Core.Interfaces;
-using LearnNet_CatalogService.Core.Validators;
 using LearnNet_CatalogService.Data.Entities;
 using LearnNet_CatalogService.DataAccessSQL;
 using LearnNet_CatalogService.Domain.Services;
 using LearnNet_CatalogService.Domain.Validators;
 using Microsoft.EntityFrameworkCore;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 
-namespace LearnNet_CatalogService
+namespace LearnNet_CatalogService.Api
 {
     public class Program
     {
@@ -26,14 +28,16 @@ namespace LearnNet_CatalogService
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddScoped<IRepository<Category>, Repository<Category>>();
-            builder.Services.AddScoped<IRepository<Product>, Repository<Product>>();
-            builder.Services.AddScoped<IValidator<CategoryDTO>, CategoryDTOValidator>();
-            builder.Services.AddScoped<IValidator<ProductDTO>, ProductDTOValidator>();
+            builder.Services.AddScoped<IRepository<Category, int>, Repository<Category, int>>();
+            builder.Services.AddScoped<IRepository<Product, int>, Repository<Product, int>>();
+            builder.Services.AddScoped<IValidator<CategoryWriteModel>, CategoryWriteModelValidator>();
+            builder.Services.AddScoped<IValidator<ProductWriteModel>, ProductWriteModelValidator>();
             builder.Services.AddScoped<IValidator<Category>, CategoryValidator>();
             builder.Services.AddScoped<IValidator<Product>, ProductValidator>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<IProductService, ProductService>();
+
+            builder.Services.AddFluentValidationAutoValidation();
 
             var app = builder.Build();
 

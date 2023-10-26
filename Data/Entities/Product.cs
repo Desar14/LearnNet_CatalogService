@@ -2,7 +2,7 @@
 
 namespace LearnNet_CatalogService.Data.Entities
 {
-    public class Product : BaseAuditableEntity
+    public class Product : BaseAuditableEntity<int>
     {
         public required string Name { get; set; }
         public string? Description { get; set; }

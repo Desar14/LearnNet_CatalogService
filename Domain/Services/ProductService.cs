@@ -3,21 +3,16 @@ using LearnNet_CatalogService.Core.DTO;
 using LearnNet_CatalogService.Core.Interfaces;
 using LearnNet_CatalogService.Data.Entities;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LearnNet_CatalogService.Domain.Services
 {
     public class ProductService : IProductService
     {
-        private readonly IRepository<Product> _repository;
+        private readonly IRepository<Product,int> _repository;
         private readonly ILogger<ProductService> _logger;
         private readonly IValidator<Product> _categoryValidator;
 
-        public ProductService(IRepository<Product> repository,
+        public ProductService(IRepository<Product, int> repository,
                               ILogger<ProductService> logger,
                               IValidator<Product> categoryValidator)
         {
@@ -26,7 +21,7 @@ namespace LearnNet_CatalogService.Domain.Services
             _categoryValidator = categoryValidator;
         }
 
-        public async Task<bool> AddProductAsync(ProductDTO dto)
+        public async Task<ProductDTO> AddProductAsync(ProductDTO dto)
         {
             var entity = ProductDTO.MapTo(dto) ?? throw new ArgumentNullException(nameof(dto));
 
@@ -37,7 +32,9 @@ namespace LearnNet_CatalogService.Domain.Services
                 throw new ValidationException(validationResult.Errors);
             }
 
-            return await _repository.Add(entity); ;
+            var addedEntity = await _repository.Add(entity);
+
+            return ProductDTO.MapFrom(addedEntity);
         }
 
         public async Task<bool> DeleteProductAsync(int productId)
@@ -52,6 +49,22 @@ namespace LearnNet_CatalogService.Domain.Services
             var result = entities.Select(ProductDTO.MapFrom).ToList();
 
             return result;
+        }
+
+        public async Task<IList<ProductDTO>> GetAllProductsByCategoryIdAsync(int? categoryId, int page = 0, int limit = 50)
+        {
+            IList<Product> productEntities;
+            if (categoryId != null)
+            {
+                productEntities = await _repository.Get(x => x.CategoryId == categoryId, page, limit);
+            }
+            else
+            {
+                productEntities = await _repository.Get(null, page, limit);
+            }
+            
+
+            return productEntities.Select(ProductDTO.MapFrom).ToList();
         }
 
         public async Task<ProductDTO?> GetProductByIdAsync(int id)

@@ -1,14 +1,13 @@
 ﻿using FluentValidation;
-using LearnNet_CatalogService.Core.DTO;
+using LearnNet_CatalogService.Api.Models.Product;
 
-namespace LearnNet_CatalogService.Core.Validators
+namespace LearnNet_CatalogService.Api.Validators
 {
-    public class ProductDTOValidator : AbstractValidator<ProductDTO>
+    public class ProductWriteModelValidator : AbstractValidator<ProductWriteModel>
     {
-        public ProductDTOValidator()
+        public ProductWriteModelValidator()
         {
             RuleFor(x => x.Name).NotEmpty().MaximumLength(50);
-            RuleFor(x => x.CategoryId).NotEmpty();
             RuleFor(x => x.Price).NotEmpty().GreaterThan(0);
             RuleFor(x => x.Amount).NotEmpty().GreaterThan(0);
         }

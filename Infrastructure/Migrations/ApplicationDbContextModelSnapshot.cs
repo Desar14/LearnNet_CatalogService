@@ -57,7 +57,7 @@ namespace LearnNet_CatalogService.DataAccessSQL.Migrations
 
                     b.HasIndex("ParentCategoryId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("LearnNet_CatalogService.Data.Entities.Product", b =>
@@ -98,14 +98,14 @@ namespace LearnNet_CatalogService.DataAccessSQL.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<decimal>("Price")
-                        .HasPrecision(2, 14)
-                        .HasColumnType("decimal(2,14)");
+                        .HasPrecision(14, 2)
+                        .HasColumnType("decimal(14,2)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("LearnNet_CatalogService.Data.Entities.Category", b =>

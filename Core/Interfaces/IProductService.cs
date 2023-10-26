@@ -6,9 +6,11 @@ namespace LearnNet_CatalogService.Core.Interfaces
     {
         Task<IList<ProductDTO>> GetAllProductsAsync();
 
+        Task<IList<ProductDTO>> GetAllProductsByCategoryIdAsync(int? categoryId, int page = 0, int limit = 50);
+
         Task<ProductDTO?> GetProductByIdAsync(int id);
 
-        Task<bool> AddProductAsync(ProductDTO dto);
+        Task<ProductDTO> AddProductAsync(ProductDTO dto);
 
         Task<bool> UpdateProductAsync(ProductDTO dto);
 
