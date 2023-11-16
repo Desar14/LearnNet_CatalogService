@@ -36,6 +36,7 @@ namespace LearnNet_CatalogService.Api
             builder.Services.AddScoped<IValidator<Product>, ProductValidator>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<IProductService, ProductService>();
+            builder.Services.AddScoped<IMessagePublisher, MessagePublisher>();
 
             builder.Services.AddFluentValidationAutoValidation();
 
