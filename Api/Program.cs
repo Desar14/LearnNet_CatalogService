@@ -1,3 +1,4 @@
+using Azure.Identity;
 using FluentValidation;
 using LearnNet_CatalogService.Api.Models.Category;
 using LearnNet_CatalogService.Api.Models.Product;
@@ -8,6 +9,7 @@ using LearnNet_CatalogService.DataAccessSQL;
 using LearnNet_CatalogService.Domain.Services;
 using LearnNet_CatalogService.Domain.Validators;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Azure;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 
 namespace LearnNet_CatalogService.Api
@@ -39,6 +41,21 @@ namespace LearnNet_CatalogService.Api
             builder.Services.AddScoped<IMessagePublisher, MessagePublisher>();
 
             builder.Services.AddFluentValidationAutoValidation();
+
+            builder.Services.AddAzureClients(clientsBuilder =>
+            {
+                clientsBuilder.AddServiceBusClientWithNamespace(builder.Configuration.GetSection("ServiceBus")["FullyQualifiedNamespace"])
+                  // (Optional) Provide name for instance to retrieve by with DI
+                  .WithName("ProductUpdates")
+                  // (Optional) Override ServiceBusClientOptions (e.g. change retry settings)
+                  .ConfigureOptions(options =>
+                  {
+                      options.RetryOptions.Delay = TimeSpan.FromMilliseconds(50);
+                      options.RetryOptions.MaxDelay = TimeSpan.FromSeconds(5);
+                      options.RetryOptions.MaxRetries = 3;
+                  });
+                clientsBuilder.UseCredential(new DefaultAzureCredential());
+            });
 
             var app = builder.Build();
 

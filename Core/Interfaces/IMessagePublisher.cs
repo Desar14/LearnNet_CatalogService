@@ -4,6 +4,6 @@ namespace LearnNet_CatalogService.Core.Interfaces
 {
     public interface IMessagePublisher 
     {
-        Task<bool> PublishUpdateMessage(ProductDTO dto);
+        Task PublishUpdateMessage(ProductDTO dto);
     }
 }

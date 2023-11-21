@@ -3,6 +3,7 @@ using Azure.Identity;
 using Azure.Messaging.ServiceBus;
 using LearnNet_CatalogService.Core.DTO;
 using LearnNet_CatalogService.Core.Interfaces;
+using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
@@ -18,18 +19,18 @@ namespace LearnNet_CatalogService.Domain.Services
     {
         private readonly ILogger<ProductService> _logger;
         private readonly IConfiguration _configuration;
+        private readonly ServiceBusClient _client;
 
-        public MessagePublisher(ILogger<ProductService> logger, IConfiguration configuration)
+        public MessagePublisher(ILogger<ProductService> logger, IConfiguration configuration, IAzureClientFactory<ServiceBusClient> serviceBusClientFactory)
         {
             _logger = logger;
             _configuration = configuration;
+            _client = serviceBusClientFactory.CreateClient("ProductUpdates");
         }
 
-        public async Task<bool> PublishUpdateMessage(ProductDTO dto)
+        public async Task PublishUpdateMessage(ProductDTO dto)
         {
-            ServiceBusClient client = new(_configuration.GetSection("ServiceBus")["FullyQualifiedNamespace"],
-                        new DefaultAzureCredential());
-            ServiceBusSender sender = client.CreateSender(_configuration.GetSection("ServiceBus")["Topic"]);
+            ServiceBusSender sender = _client.CreateSender(_configuration.GetSection("ServiceBus")["Topic"]);
 
             using ServiceBusMessageBatch messageBatch = await sender.CreateMessageBatchAsync();
 
@@ -51,19 +52,10 @@ namespace LearnNet_CatalogService.Domain.Services
                 await sender.SendMessagesAsync(messageBatch);
                 _logger.LogDebug("The message has been published to the topic.");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, "Sending message error");
             }
-            finally
-            {
-                // Calling DisposeAsync on client types is required to ensure that network
-                // resources and other unmanaged objects are properly cleaned up.
-                await sender.DisposeAsync();
-                await client.DisposeAsync();
-            }
-
-            return true;
         }
     }
 }
