@@ -37,7 +37,7 @@ namespace LearnNet_CatalogService.Domain.Services
 
             var addedEntity = await _repository.Add(entity);
 
-            _ = _messagePublisher.PublishUpdateMessage(dto);
+            await _messagePublisher.PublishUpdateMessage(dto);
 
             return ProductDTO.MapFrom(addedEntity);
         }
@@ -97,7 +97,7 @@ namespace LearnNet_CatalogService.Domain.Services
 
             if (result)
             {
-                _ = _messagePublisher.PublishUpdateMessage(dto);
+                await _messagePublisher.PublishUpdateMessage(dto);
             }            
 
             return result;
