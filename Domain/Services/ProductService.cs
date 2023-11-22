@@ -11,14 +11,17 @@ namespace LearnNet_CatalogService.Domain.Services
         private readonly IRepository<Product,int> _repository;
         private readonly ILogger<ProductService> _logger;
         private readonly IValidator<Product> _categoryValidator;
+        private readonly IMessagePublisher _messagePublisher;
 
         public ProductService(IRepository<Product, int> repository,
                               ILogger<ProductService> logger,
-                              IValidator<Product> categoryValidator)
+                              IValidator<Product> categoryValidator,
+                              IMessagePublisher messagePublisher)
         {
             _repository = repository;
             _logger = logger;
             _categoryValidator = categoryValidator;
+            _messagePublisher = messagePublisher;
         }
 
         public async Task<ProductDTO> AddProductAsync(ProductDTO dto)
@@ -33,6 +36,8 @@ namespace LearnNet_CatalogService.Domain.Services
             }
 
             var addedEntity = await _repository.Add(entity);
+
+            await _messagePublisher.PublishUpdateMessage(dto);
 
             return ProductDTO.MapFrom(addedEntity);
         }
@@ -88,7 +93,14 @@ namespace LearnNet_CatalogService.Domain.Services
                 throw new ValidationException(validationResult.Errors);
             }
 
-            return await _repository.Update(entity);
+            var result = await _repository.Update(entity);
+
+            if (result)
+            {
+                await _messagePublisher.PublishUpdateMessage(dto);
+            }            
+
+            return result;
         }
     }
 }
