@@ -15,7 +15,6 @@ namespace LearnNet_CatalogService.Api.Controllers
 {
     [Route("api/products")]
     [ApiController]
-    [Authorize(Policy = Policies.Read)]
     public class ProductsController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
@@ -35,6 +34,7 @@ namespace LearnNet_CatalogService.Api.Controllers
         }
 
         // GET: api/<ProductsController>
+        [Authorize(Policy = Policies.Read)]
         [HttpGet]
         [Produces("application/json")]
         [ProducesResponseType(typeof(LinkCollectionWrapper<ProductModel>), StatusCodes.Status200OK)]
@@ -55,6 +55,7 @@ namespace LearnNet_CatalogService.Api.Controllers
         }
 
         // GET api/<ProductsController>/5
+        [Authorize(Policy = Policies.Read)]
         [HttpGet("{id}")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(ProductModel), StatusCodes.Status200OK)]
