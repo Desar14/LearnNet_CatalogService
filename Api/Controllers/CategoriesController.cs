@@ -1,9 +1,12 @@
-﻿using LearnNet_CatalogService.Api.Models.Category;
+﻿using LearnNet_CatalogService.Api.Auth;
+using LearnNet_CatalogService.Api.Models.Category;
 using LearnNet_CatalogService.Api.Models.HATEOAS;
 using LearnNet_CatalogService.Api.Models.Product;
 using LearnNet_CatalogService.Core.DTO;
 using LearnNet_CatalogService.Core.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Web;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -32,6 +35,7 @@ namespace LearnNet_CatalogService.Api.Controllers
 
 
         // GET: api/<CategoryController>
+        [Authorize(Policy = Policies.Read)]
         [HttpGet]
         [Produces("application/json")]
         [ProducesResponseType(typeof(LinkCollectionWrapper<CategoryModel>), StatusCodes.Status200OK)]
@@ -52,6 +56,7 @@ namespace LearnNet_CatalogService.Api.Controllers
         }
 
         // GET api/<CategoryController>/5
+        [Authorize(Policy = Policies.Read)]
         [HttpGet("{id}")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(CategoryModel), StatusCodes.Status200OK)]
@@ -69,6 +74,7 @@ namespace LearnNet_CatalogService.Api.Controllers
             return Ok(model);
         }
 
+        [Authorize(Policy = Policies.Read)]
         [HttpGet("{id}/products")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(CategoryModel), StatusCodes.Status200OK)]
@@ -87,6 +93,7 @@ namespace LearnNet_CatalogService.Api.Controllers
         }
 
         // POST api/<CategoryController>
+        [Authorize(Policy = Policies.Create)]
         [HttpPost]
         [Consumes("application/json")]
         [Produces("application/json")]
@@ -106,6 +113,7 @@ namespace LearnNet_CatalogService.Api.Controllers
         }
 
         // PUT api/<CategoryController>/5
+        [Authorize(Policy = Policies.Update)]
         [HttpPut("{id}")]
         [Consumes("application/json")]
         [Produces("application/json")]
@@ -129,6 +137,7 @@ namespace LearnNet_CatalogService.Api.Controllers
         }
 
         // DELETE api/<CategoryController>/5
+        [Authorize(Policy = Policies.Delete)]
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> Delete(int id)

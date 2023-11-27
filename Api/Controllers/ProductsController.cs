@@ -1,9 +1,11 @@
 ﻿using FluentValidation;
+using LearnNet_CatalogService.Api.Auth;
 using LearnNet_CatalogService.Api.Models.Category;
 using LearnNet_CatalogService.Api.Models.HATEOAS;
 using LearnNet_CatalogService.Api.Models.Product;
 using LearnNet_CatalogService.Core.DTO;
 using LearnNet_CatalogService.Core.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 
@@ -13,6 +15,7 @@ namespace LearnNet_CatalogService.Api.Controllers
 {
     [Route("api/products")]
     [ApiController]
+    [Authorize(Policy = Policies.Read)]
     public class ProductsController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
@@ -70,6 +73,7 @@ namespace LearnNet_CatalogService.Api.Controllers
         }
 
         // POST api/<ProductsController>
+        [Authorize(Policy = Policies.Create)]
         [HttpPost]
         [Consumes("application/json")]
         [Produces("application/json")]
@@ -93,6 +97,7 @@ namespace LearnNet_CatalogService.Api.Controllers
         }
 
         // PUT api/<ProductsController>/5
+        [Authorize(Policy = Policies.Update)]
         [HttpPut("{id}")]
         [Consumes("application/json")]
         [Produces("application/json")]
@@ -118,6 +123,7 @@ namespace LearnNet_CatalogService.Api.Controllers
         }
 
         // DELETE api/<ProductsController>/5
+        [Authorize(Policy = Policies.Delete)]
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> Delete(int id)
