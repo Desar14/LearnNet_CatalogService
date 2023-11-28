@@ -35,7 +35,7 @@ namespace LearnNet_CatalogService.Api.Controllers
 
 
         // GET: api/<CategoryController>
-        [Authorize(Policy = Policies.Read)]
+        [Authorize(Policy = Policies.Categories_Read)]
         [HttpGet]
         [Produces("application/json")]
         [ProducesResponseType(typeof(LinkCollectionWrapper<CategoryModel>), StatusCodes.Status200OK)]
@@ -56,7 +56,7 @@ namespace LearnNet_CatalogService.Api.Controllers
         }
 
         // GET api/<CategoryController>/5
-        [Authorize(Policy = Policies.Read)]
+        [Authorize(Policy = Policies.Categories_Read)]
         [HttpGet("{id}")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(CategoryModel), StatusCodes.Status200OK)]
@@ -74,7 +74,7 @@ namespace LearnNet_CatalogService.Api.Controllers
             return Ok(model);
         }
 
-        [Authorize(Policy = Policies.Read)]
+        [Authorize(Policy = Policies.Categories_Read)]
         [HttpGet("{id}/products")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(CategoryModel), StatusCodes.Status200OK)]
@@ -93,7 +93,7 @@ namespace LearnNet_CatalogService.Api.Controllers
         }
 
         // POST api/<CategoryController>
-        [Authorize(Policy = Policies.Create)]
+        [Authorize(Policy = Policies.Categories_Create)]
         [HttpPost]
         [Consumes("application/json")]
         [Produces("application/json")]
@@ -113,7 +113,7 @@ namespace LearnNet_CatalogService.Api.Controllers
         }
 
         // PUT api/<CategoryController>/5
-        [Authorize(Policy = Policies.Update)]
+        [Authorize(Policy = Policies.Categories_Update)]
         [HttpPut("{id}")]
         [Consumes("application/json")]
         [Produces("application/json")]
@@ -137,7 +137,7 @@ namespace LearnNet_CatalogService.Api.Controllers
         }
 
         // DELETE api/<CategoryController>/5
-        [Authorize(Policy = Policies.Delete)]
+        [Authorize(Policy = Policies.Categories_Delete)]
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> Delete(int id)

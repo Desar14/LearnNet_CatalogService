@@ -34,7 +34,7 @@ namespace LearnNet_CatalogService.Api.Controllers
         }
 
         // GET: api/<ProductsController>
-        [Authorize(Policy = Policies.Read)]
+        [Authorize(Policy = Policies.Products_Read)]
         [HttpGet]
         [Produces("application/json")]
         [ProducesResponseType(typeof(LinkCollectionWrapper<ProductModel>), StatusCodes.Status200OK)]
@@ -55,7 +55,7 @@ namespace LearnNet_CatalogService.Api.Controllers
         }
 
         // GET api/<ProductsController>/5
-        [Authorize(Policy = Policies.Read)]
+        [Authorize(Policy = Policies.Products_Read)]
         [HttpGet("{id}")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(ProductModel), StatusCodes.Status200OK)]
@@ -74,7 +74,7 @@ namespace LearnNet_CatalogService.Api.Controllers
         }
 
         // POST api/<ProductsController>
-        [Authorize(Policy = Policies.Create)]
+        [Authorize(Policy = Policies.Products_Create)]
         [HttpPost]
         [Consumes("application/json")]
         [Produces("application/json")]
@@ -98,7 +98,7 @@ namespace LearnNet_CatalogService.Api.Controllers
         }
 
         // PUT api/<ProductsController>/5
-        [Authorize(Policy = Policies.Update)]
+        [Authorize(Policy = Policies.Products_Update)]
         [HttpPut("{id}")]
         [Consumes("application/json")]
         [Produces("application/json")]
@@ -124,7 +124,7 @@ namespace LearnNet_CatalogService.Api.Controllers
         }
 
         // DELETE api/<ProductsController>/5
-        [Authorize(Policy = Policies.Delete)]
+        [Authorize(Policy = Policies.Products_Delete)]
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> Delete(int id)

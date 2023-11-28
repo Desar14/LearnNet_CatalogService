@@ -45,7 +45,7 @@ namespace LearnNet_CatalogService.Api
                 options.Authority = builder.Configuration["JWT:ValidIssuer"];
 
                 options.TokenValidationParameters.ValidateAudience = true;
-                options.Audience = builder.Configuration["JWT:ValidAudience"];
+                options.TokenValidationParameters.ValidAudiences = builder.Configuration.GetSection("JWT:ValidAudience").Get<List<string>>();
 
                 // it's recommended to check the type header to avoid "JWT confusion" attacks
                 options.TokenValidationParameters.ValidTypes = new[] { "at+jwt" };
@@ -53,28 +53,55 @@ namespace LearnNet_CatalogService.Api
 
             builder.Services.AddAuthorization(options =>
             {
-                options.AddPolicy(Policies.Read, policy =>
+                // Categories
+                options.AddPolicy(Policies.Categories_Read, policy =>
                 {
                     policy.RequireAuthenticatedUser();
-                    policy.RequireAssertion(x => x.User.HasClaim(x => x.Type == "scope" && x.Value.Contains("read")));
+                    policy.RequireClaim("scope", "categories.read");
                 });
 
-                options.AddPolicy(Policies.Create, policy =>
+                options.AddPolicy(Policies.Categories_Create, policy =>
                 {
                     policy.RequireAuthenticatedUser();
-                    policy.RequireAssertion(x => x.User.HasClaim(x => x.Type == "scope" && x.Value.Contains("create")));
+                    policy.RequireClaim("scope", "categories.create");
                 });
 
-                options.AddPolicy(Policies.Update, policy =>
+                options.AddPolicy(Policies.Categories_Update, policy =>
                 {
                     policy.RequireAuthenticatedUser();
-                    policy.RequireAssertion(x => x.User.HasClaim(x => x.Type == "scope" && x.Value.Contains("update")));
+                    policy.RequireClaim("scope", "categories.update");
                 });
 
-                options.AddPolicy(Policies.Delete, policy =>
+                options.AddPolicy(Policies.Categories_Delete, policy =>
                 {
                     policy.RequireAuthenticatedUser();
-                    policy.RequireAssertion(x => x.User.HasClaim(x => x.Type == "scope" && x.Value.Contains("delete")));
+                    policy.RequireClaim("scope", "categories.delete");
+                });
+
+
+                // Products
+                options.AddPolicy(Policies.Products_Read, policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("scope", "products.read");
+                });
+
+                options.AddPolicy(Policies.Products_Create, policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("scope", "products.create");
+                });
+
+                options.AddPolicy(Policies.Products_Update, policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("scope", "products.update");
+                });
+
+                options.AddPolicy(Policies.Products_Delete, policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("scope", "products.delete");
                 });
             });
 
