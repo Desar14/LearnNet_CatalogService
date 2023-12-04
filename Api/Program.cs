@@ -1,5 +1,6 @@
 using Azure.Identity;
 using FluentValidation;
+using LearnNet_CatalogService.Api.Auth;
 using LearnNet_CatalogService.Api.Models.Category;
 using LearnNet_CatalogService.Api.Models.Product;
 using LearnNet_CatalogService.Api.Validators;
@@ -8,9 +9,14 @@ using LearnNet_CatalogService.Data.Entities;
 using LearnNet_CatalogService.DataAccessSQL;
 using LearnNet_CatalogService.Domain.Services;
 using LearnNet_CatalogService.Domain.Validators;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Azure;
+using Microsoft.Identity.Web;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
+using System.Text;
 
 namespace LearnNet_CatalogService.Api
 {
@@ -25,10 +31,109 @@ namespace LearnNet_CatalogService.Api
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
 
+            //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            //    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
+
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.Authority = builder.Configuration["JWT:ValidIssuer"];
+
+                options.TokenValidationParameters.ValidateAudience = true;
+                options.TokenValidationParameters.ValidAudiences = builder.Configuration.GetSection("JWT:ValidAudience").Get<List<string>>();
+
+                // it's recommended to check the type header to avoid "JWT confusion" attacks
+                options.TokenValidationParameters.ValidTypes = new[] { "at+jwt" };
+            });
+
+            builder.Services.AddAuthorization(options =>
+            {
+                // Categories
+                options.AddPolicy(Policies.Categories_Read, policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("scope", "categories.read");
+                });
+
+                options.AddPolicy(Policies.Categories_Create, policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("scope", "categories.create");
+                });
+
+                options.AddPolicy(Policies.Categories_Update, policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("scope", "categories.update");
+                });
+
+                options.AddPolicy(Policies.Categories_Delete, policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("scope", "categories.delete");
+                });
+
+
+                // Products
+                options.AddPolicy(Policies.Products_Read, policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("scope", "products.read");
+                });
+
+                options.AddPolicy(Policies.Products_Create, policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("scope", "products.create");
+                });
+
+                options.AddPolicy(Policies.Products_Update, policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("scope", "products.update");
+                });
+
+                options.AddPolicy(Policies.Products_Delete, policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("scope", "products.delete");
+                });
+            });
+
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(option =>
+            {
+                option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Please enter a valid token",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    BearerFormat = "JWT",
+                    Scheme = "Bearer"
+                });
+                option.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type=ReferenceType.SecurityScheme,
+                                Id="Bearer"
+                            }
+                        },
+                        new string[]{}
+                    }
+                });
+            });
 
             builder.Services.AddScoped<IRepository<Category, int>, Repository<Category, int>>();
             builder.Services.AddScoped<IRepository<Product, int>, Repository<Product, int>>();
@@ -68,6 +173,7 @@ namespace LearnNet_CatalogService.Api
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 
